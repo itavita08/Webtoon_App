@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:toonflix/screens/detail_screen.dart';
 
-class WEbtoon extends StatelessWidget {
+class Webtoon extends StatelessWidget {
   final String title, thumb, id;
 
-  const WEbtoon({
+  const Webtoon({
     super.key,
     required this.title,
     required this.thumb,
@@ -19,8 +19,11 @@ class WEbtoon extends StatelessWidget {
           context,
           MaterialPageRoute(
             // PadgeROuteBuilder : 더 다양한 애니메이션 적용 가능,
-            builder: (context) =>
-                DetailScreen(title: title, thumb: thumb, id: id),
+            builder: (context) => DetailScreen(
+              title: title,
+              thumb: thumb,
+              id: id,
+            ),
             fullscreenDialog: true,
           ),
         );
