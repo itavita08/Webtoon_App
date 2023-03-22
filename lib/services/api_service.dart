@@ -6,8 +6,7 @@ import 'package:toonflix/model/webtoon_episode_model.dart';
 import 'package:toonflix/model/webtoon_model.dart';
 
 class ApiService {
-  static const String baseUrl =
-      "https://webtoon-crawler.nomadcoders.workers.dev";
+  static const String baseUrl = "http://localhost:3000/webtoon";
   static const String today = "today";
 
   static Future<List<WebtoonModel>> getTodaysToons() async {
@@ -27,7 +26,7 @@ class ApiService {
   }
 
   static Future<WebtoonDetailModel> getToonById(String id) async {
-    final url = Uri.parse("$baseUrl/$id");
+    final url = Uri.parse("$baseUrl/detail/$id");
     final response = await http.get(url);
     if (response.statusCode == 200) {
       final webtoon = jsonDecode(response.body);
