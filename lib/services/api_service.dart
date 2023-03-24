@@ -1,21 +1,19 @@
 import 'dart:convert';
 
-import 'package:http/http.dart' as http;
 import 'package:toonflix/model/webtoon_detail_model.dart';
 import 'package:toonflix/model/webtoon_episode_model.dart';
 import 'package:toonflix/model/webtoon_model.dart';
+import 'package:toonflix/services/jwt_service.dart';
 
 class ApiService {
-  static const String baseUrl = "http://localhost:3000/webtoon";
   static const String today = "today";
 
   static Future<List<WebtoonModel>> getTodaysToons() async {
     // static Future<List<dynamic>> getTodaysToons() async {
     List<WebtoonModel> webtoonInstances = [];
-    final url = Uri.parse("$baseUrl/$today");
-    final response = await http.get(url);
+    final response = await dio.get('/$today');
     if (response.statusCode == 200) {
-      final List<dynamic> webtoons = jsonDecode(response.body);
+      final List<dynamic> webtoons = jsonDecode(response.data);
       for (var webtoon in webtoons) {
         webtoonInstances.add(WebtoonModel(webtoon));
       }
@@ -26,10 +24,9 @@ class ApiService {
   }
 
   static Future<WebtoonDetailModel> getToonById(String id) async {
-    final url = Uri.parse("$baseUrl/detail/$id");
-    final response = await http.get(url);
+    final response = await dio.get('/detail/$id');
     if (response.statusCode == 200) {
-      final webtoon = jsonDecode(response.body);
+      final webtoon = jsonDecode(response.data);
       return WebtoonDetailModel.fromJson(webtoon);
     }
     throw Error();
@@ -38,10 +35,9 @@ class ApiService {
   static Future<List<WebtoonEpisodeModel>> getLatesEpisodeById(
       String id) async {
     List<WebtoonEpisodeModel> episodesInstances = [];
-    final url = Uri.parse("$baseUrl/$id/episodes");
-    final response = await http.get(url);
+    final response = await dio.get('/$id/episodes');
     if (response.statusCode == 200) {
-      final episodes = jsonDecode(response.body);
+      final episodes = jsonDecode(response.data);
       for (var episode in episodes) {
         episodesInstances.add(WebtoonEpisodeModel.fromJson(episode));
       }
