@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-const String apiUrl = 'http://localhost:3000';
+const String apiUrl = 'http://localhost:3000/webtoon';
 final Dio dio = Dio(BaseOptions(baseUrl: apiUrl));
 const FlutterSecureStorage storage = FlutterSecureStorage();
 
