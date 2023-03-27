@@ -22,7 +22,7 @@ class _JoinScreenState extends State<JoinScreen> {
     final String password = _passwordController.text;
 
     final response = await dio.post(
-      '/join',
+      '/user/join',
       data: {
         'name': name,
         'id': id,

@@ -21,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
     String pw = pwController.text;
 
     var response = await dio.post(
-      '/login',
+      '/user/login',
       data: {
         'id': id,
         'password': pw,
