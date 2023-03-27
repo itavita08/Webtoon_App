@@ -89,7 +89,8 @@ class _JoinScreenState extends State<JoinScreen> {
                         content: const Text('회원가입 실패'),
                         actions: [
                           TextButton(
-                            onPressed: () => Navigator.pop(context),
+                            onPressed: () => Navigator.popUntil(
+                                context, ModalRoute.withName('/home')),
                             child: const Text('확인'),
                           ),
                         ],

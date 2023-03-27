@@ -44,9 +44,9 @@ const authenticateRefreshToken = (req, res) => {
             }
         }
         req.user = decoded;
-        const accessToken = generateAccessToken();
-        const refreshToken = generateRefreshToken();
-        return res.json({ 'accessToekn': accessToken, 'refreshToken': refreshToken});
+        const newAccessToken = generateAccessToken();
+        const newRefreshToken = generateRefreshToken();
+        return res.json({ 'accessToekn': newAccessToken, 'refreshToken': newRefreshToken});
     } );
 }
 

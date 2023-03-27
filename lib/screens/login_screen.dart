@@ -93,7 +93,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         onTap: () {
                           _login();
                           if (isLoading) {
-                            Navigator.pushReplacementNamed(context, '/home');
+                            Navigator.popUntil(
+                                context, ModalRoute.withName('/home'));
                           } else {
                             showDialog(
                               context: context,

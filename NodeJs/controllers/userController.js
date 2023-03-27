@@ -1,10 +1,28 @@
 const bcrypt = require('bcrypt');
-const { User } = require('../models/userDTO');
 const mysql = require('mysql2/promise');
 const config = require('../env/db_config.json');
 const jwt = require('../middlewares/jwt');
+const { User } = require('../models/userDTO');
 
 const pool = mysql.createPool(config);
+
+const getUser = () => {
+  
+    const connection = pool.getConnection();
+    try{
+      const [rows] = connection.query('SELECT * FROM user WHERE user_id = ?', [id]);
+      if(rows.length == 0){
+        throw new Error('일치하는 사용자 ID가 없습니다. 다시 입력해주세요')
+      }
+  
+      const user = new User(rows[0].user_id, rows[0].user_name, rows[0].user_password);
+      return user;
+    } catch (error) {
+        console.log(error);
+    } finally {
+      connection.release();
+    }
+  }
 
 const loginUser = async (req, res) => {
   const { id, password } = req.body;
@@ -25,8 +43,9 @@ const loginUser = async (req, res) => {
     const accessToken = jwt.generateAccessToken(new User(user.id, user.name, user.password));
     const refreshToken = jwt.generateRefreshToken(new User(user.id, user.name, user.password));
 
-    res.json({ success: true, message: '로그인 성공', token: accessToken });
+    // res.setHeader('Set-Cookie', `refreshToken=${refreshToken}; HttpOnly; Secure`);
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
+    res.json({ success: true, message: '로그인 성공', token: accessToken });
   } catch (error) {
     res.status(401).json({ success: false, message: "로그인 실패, 다시 시도해 주세요." });
   } finally {
@@ -69,4 +88,4 @@ const joinUser = async (req, res) => {
   }
 }
 
-module.exports = { joinUser, loginUser }
+module.exports = { joinUser, loginUser, getUser }
