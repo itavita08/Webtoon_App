@@ -9,7 +9,6 @@ class ApiService {
   static const String today = "today";
 
   static Future<List<WebtoonModel>> getTodaysToons() async {
-    // static Future<List<dynamic>> getTodaysToons() async {
     List<WebtoonModel> webtoonInstances = [];
     final response = await dio.get('/$today');
     if (response.statusCode == 200) {
@@ -18,7 +17,6 @@ class ApiService {
         webtoonInstances.add(WebtoonModel(webtoon));
       }
       return webtoonInstances;
-      // return webtoons;
     }
     throw Error();
   }

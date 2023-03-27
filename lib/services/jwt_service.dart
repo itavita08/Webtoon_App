@@ -1,24 +1,27 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-const String apiUrl = 'http://localhost:3000/webtoon';
+const String apiUrl = 'http://localhost:3000/';
 final Dio dio = Dio(BaseOptions(baseUrl: apiUrl));
 const FlutterSecureStorage storage = FlutterSecureStorage();
 
 void setupInterceptors() {
   dio.interceptors.add(
     InterceptorsWrapper(onRequest: (options, handler) async {
-      final accessToken = await storage.read(key: 'acessToken');
-      if (accessToken != null) {
-        options.headers['Authorization'] = 'Bearer $accessToken';
-      } else {
-        options.headers.remove('Authorization');
+      final uri = options.uri.toString();
+      if (uri.startsWith('/webtoon')) {
+        final accessToken = await storage.read(key: 'acessToken');
+        if (accessToken != null) {
+          options.headers['Authorization'] = 'Bearer $accessToken';
+        } else {
+          options.headers.remove('Authorization');
+        }
       }
       return handler.next(options);
     }, onResponse: (response, handler) async {
       if (response.statusCode == 401) {
         await storage.delete(key: 'accessToken');
-        // Navigator.pushAndRemoveUntil(context, '/login', (_) => false);
+        await refreshAccessToken();
       }
       return handler.next(response);
     }),
@@ -59,12 +62,14 @@ Future<String?> refreshAccessToken() async {
   try {
     final response =
         await dio.post('/refresh', data: {'refreshToken': refreshToken});
-    final accessToken = response.data['accessToken'];
+    final newAccessToken = response.data['accessToken'];
     final newRefreshToken = response.data['refreshToken'];
 
-    saveTokens(accessToken, newRefreshToken);
+    saveTokens(newAccessToken, newRefreshToken);
 
-    return accessToken;
+    dio.options.headers['Authorization'] = 'Bearer $newAccessToken';
+
+    return newAccessToken;
   } on DioError {
     return null;
   }

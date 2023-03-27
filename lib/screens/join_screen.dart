@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:toonflix/screens/home_screen.dart';
+import 'package:toonflix/services/jwt_service.dart';
 
 class JoinScreen extends StatefulWidget {
   const JoinScreen({super.key});
@@ -21,9 +21,9 @@ class _JoinScreenState extends State<JoinScreen> {
     final String id = _idController.text;
     final String password = _passwordController.text;
 
-    final response = await http.post(
-      Uri.parse('http://localhost:3000/webtoon'),
-      body: {
+    final response = await dio.post(
+      '/join',
+      data: {
         'name': name,
         'id': id,
         'password': password,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:toonflix/screens/join_screen.dart';
 import 'dart:convert';
 
@@ -21,12 +20,17 @@ class _LoginScreenState extends State<LoginScreen> {
     String id = idController.text;
     String pw = pwController.text;
 
-    var url = Uri.parse('http://localhost:3000/webtoon');
-    var response = await http.post(url, body: {'id': id, 'password': pw});
+    var response = await dio.post(
+      '/login',
+      data: {
+        'id': id,
+        'password': pw,
+      },
+    );
 
     setState(() {
       if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
+        var data = jsonDecode(response.data);
         saveTokens(data['accessToken'], data['refreshToken']);
         isLoading = true;
       } else {
