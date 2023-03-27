@@ -10,7 +10,7 @@ void setupInterceptors() {
     InterceptorsWrapper(onRequest: (options, handler) async {
       final uri = options.uri.toString();
       if (uri.startsWith('/webtoon')) {
-        final accessToken = await storage.read(key: 'acessToken');
+        final accessToken = await storage.read(key: 'accessToken');
         if (accessToken != null) {
           options.headers['Authorization'] = 'Bearer $accessToken';
         } else {
