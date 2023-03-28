@@ -7,17 +7,17 @@ const generateAccessToken = (user) => {
     return jwt.sign(user, accessSecret, { expiresIn: '30m' });
 }
 
-const generateRefreshToken = (user) => {
-    return jwt.sign(user, refreshSecret);
+const generateRefreshToken = () => {
+    return jwt.sign( refreshSecret, {expiresIn: '1 days'});
 }
 
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+    const accessToken = authHeader && authHeader.split(' ')[1];
 
-// if (!token) {
-//     return res.status(401).send('인증되지 않은 요청입니다.');
-// }
+    if (!accessToken) {
+        return res.status(401).send('인증되지 않은 요청입니다.');
+    }
 
     jwt.verify(token, accessSecret, (err, decoded) => {
         if (err) {
@@ -34,6 +34,10 @@ const authenticateToken = (req, res, next) => {
 
 const authenticateRefreshToken = (req, res) => {
     const refreshToken = req.body.refreshToken;
+
+    if (!refreshToken) {
+        return res.status(401).send('인증되지 않은 요청입니다.');
+    }
 
     jwt.verify(refreshToken, refreshSecret, (err, decoded) => {
         if(err) {

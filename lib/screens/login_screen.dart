@@ -31,7 +31,11 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.data);
-        saveTokens(data['accessToken'], data['refreshToken']);
+        var refreshToken = dio.options.headers['cookie']
+            .split(';')
+            .firstWhere((element) => element.contains('refreshToken='))
+            .split('=')[1];
+        saveTokens(data['accessToken'], refreshToken);
         isLoading = true;
       } else {
         isLoading = false;

@@ -6,24 +6,6 @@ const { User } = require('../models/userDTO');
 
 const pool = mysql.createPool(config);
 
-const getUser = () => {
-  
-    const connection = pool.getConnection();
-    try{
-      const [rows] = connection.query('SELECT * FROM user WHERE user_id = ?', [id]);
-      if(rows.length == 0){
-        throw new Error('일치하는 사용자 ID가 없습니다. 다시 입력해주세요')
-      }
-  
-      const user = new User(rows[0].user_id, rows[0].user_name, rows[0].user_password);
-      return user;
-    } catch (error) {
-        console.log(error);
-    } finally {
-      connection.release();
-    }
-  }
-
 const loginUser = async (req, res) => {
   const { id, password } = req.body;
 
@@ -40,13 +22,18 @@ const loginUser = async (req, res) => {
       throw new Error('비밀번호가 일치하지 않습니다.');
     }
 
-    const accessToken = jwt.generateAccessToken(new User(user.id, user.name, user.password));
-    const refreshToken = jwt.generateRefreshToken(new User(user.id, user.name, user.password));
+    const accessToken = jwt.generateAccessToken(new User(user.user_id, user.name, user.password));
+    const refreshToken = jwt.generateRefreshToken();
 
-    // res.setHeader('Set-Cookie', `refreshToken=${refreshToken}; HttpOnly; Secure`);
+    await connection.beginTransaction();
+    await connection.query('INSERT INTO token (user_id, refresh_token) VALUES (?,?)', [user.user_id, refreshToken]);
+
+    await connection.commit();
+
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
-    res.json({ success: true, message: '로그인 성공', token: accessToken });
+    res.json({ success: true, message: '로그인 성공', accesstoken: accessToken });
   } catch (error) {
+    await connection.rollback();
     res.status(401).json({ success: false, message: "로그인 실패, 다시 시도해 주세요." });
   } finally {
     connection.release();
