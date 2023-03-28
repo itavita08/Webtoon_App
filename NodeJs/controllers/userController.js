@@ -21,17 +21,19 @@ const loginUser = async (req, res) => {
     if (!passwordMatch) {
       throw new Error('비밀번호가 일치하지 않습니다.');
     }
-    console.log(user);
-
-    // const userId = user.user_id;
-    // const userName = user.user_name;
-    // const userPassword = user.user_password;
 
     const accessToken = jwt.generateAccessToken(user);
     const refreshToken = jwt.generateRefreshToken();
 
     await connection.beginTransaction();
-    await connection.query('INSERT INTO token (user_id, refresh_token) VALUES (?,?)', [user.user_id, refreshToken]);
+
+    const [isRefresh] = await connection.query('SELECT refresh_token FROM token WHERE user_id = ?', [id]);
+
+    if(isRefresh.length == 0){
+        await connection.query('INSERT INTO token (user_id, refresh_token) VALUES (?,?)', [user.user_id, refreshToken]);
+    } else {
+        await connection.query('UPDATE token SET refresh_token = ? WHERE user_id = ?', [refreshToken, id]);
+    }
 
     await connection.commit();
 
@@ -40,7 +42,6 @@ const loginUser = async (req, res) => {
   } catch (error) {
     await connection.rollback();
     res.status(401).json({ success: false, message: "로그인 실패, 다시 시도해 주세요." });
-    console.log(error);
   } finally {
     connection.release();
   }

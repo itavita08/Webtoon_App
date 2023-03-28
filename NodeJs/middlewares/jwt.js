@@ -69,12 +69,10 @@ const authenticateRefreshToken = (req, res) => {
                 return res.status(403).send('잘못된 토큰입니다.');
             }
         }
-        // req.user = decoded;
         const user = await getUserData(refreshToken);
-
-        console.log("재발급 완료");
         const newAccessToken = generateAccessToken(user);
         const newRefreshToken = generateRefreshToken();
+        
         return res.json({ 'accessToekn': newAccessToken, 'refreshToken': newRefreshToken});
     } );
 }
