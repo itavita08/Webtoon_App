@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const mysql = require('mysql2/promise');
 const config = require('../env/db_config.json');
 const jwt = require('../middlewares/jwt');
-const { User } = require('../models/userDTO');
+// const { User } = require('../models/userDTO');
 
 const pool = mysql.createPool(config);
 
@@ -21,8 +21,13 @@ const loginUser = async (req, res) => {
     if (!passwordMatch) {
       throw new Error('비밀번호가 일치하지 않습니다.');
     }
+    console.log(user);
 
-    const accessToken = jwt.generateAccessToken(new User(user.user_id, user.name, user.password));
+    // const userId = user.user_id;
+    // const userName = user.user_name;
+    // const userPassword = user.user_password;
+
+    const accessToken = jwt.generateAccessToken(user);
     const refreshToken = jwt.generateRefreshToken();
 
     await connection.beginTransaction();
@@ -35,6 +40,7 @@ const loginUser = async (req, res) => {
   } catch (error) {
     await connection.rollback();
     res.status(401).json({ success: false, message: "로그인 실패, 다시 시도해 주세요." });
+    console.log(error);
   } finally {
     connection.release();
   }
@@ -75,4 +81,4 @@ const joinUser = async (req, res) => {
   }
 }
 
-module.exports = { joinUser, loginUser, getUser }
+module.exports = { joinUser, loginUser }
