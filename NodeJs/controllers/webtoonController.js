@@ -13,7 +13,6 @@ const getWebtoonsByDay = async (req, res) => {
             "id" : data[i]['id'],
             "thumb" : data[i]['thumb']});
     }
-
     res.json(list);
   } catch (error) {
     console.error(error);

@@ -11,7 +11,7 @@ app.use(cors());
 
 app.use('/webtoon', webtoonRoutes);
 app.use('/user', userRoutes);
-app.use('/refresh', jwt.authenticateRefreshToken);
+app.get('/refresh', jwt.authenticateRefreshToken);
 
 app.listen(3000, () => {
   console.log('Server started on port 3000');

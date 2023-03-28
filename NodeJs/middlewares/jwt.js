@@ -34,18 +34,23 @@ const generateRefreshToken = () => {
 }
 
 const authenticateToken = (req, res, next) => {
+    console.log(4);
     const authHeader = req.headers['authorization'];
     const accessToken = authHeader && authHeader.split(' ')[1];
 
     if (!accessToken) {
+        console.log(3);
         return res.status(401).send('인증되지 않은 요청입니다.');
     }
 
     jwt.verify(accessToken, accessSecret, (err, decoded) => {
         if (err) {
             if(err.name === "TokenExpiredError"){
+                console.log(1);
                 return res.status(401).send('만료된 토큰입니다');
             } else {
+                console.log(2);
+                console.log(err);
                 return res.status(403).send('잘못된 토큰입니다1.');
             }
         }
@@ -56,7 +61,6 @@ const authenticateToken = (req, res, next) => {
 
 const authenticateRefreshToken = (req, res) => {
     const refreshToken = req.body.refreshToken;
-
     if (!refreshToken) {
         return res.status(401).send('인증되지 않은 요청입니다.');
     }
@@ -72,7 +76,7 @@ const authenticateRefreshToken = (req, res) => {
         const user = await getUserData(refreshToken);
         const newAccessToken = generateAccessToken(user);
         const newRefreshToken = generateRefreshToken();
-        
+
         return res.json({ 'accessToekn': newAccessToken, 'refreshToken': newRefreshToken});
     } );
 }

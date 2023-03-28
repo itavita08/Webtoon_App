@@ -38,7 +38,7 @@ const loginUser = async (req, res) => {
     await connection.commit();
 
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
-    res.json({ success: true, message: '로그인 성공', accesstoken: accessToken });
+    res.status(200).json({ success: true, message: '로그인 성공', accessToken: accessToken });
   } catch (error) {
     await connection.rollback();
     res.status(401).json({ success: false, message: "로그인 실패, 다시 시도해 주세요." });
@@ -71,7 +71,7 @@ const joinUser = async (req, res) => {
     await connection.query('INSERT INTO user (user_id, user_name, user_password) VALUES (?, ?, ?)', [id, name, hashedPassword]);
     
     await connection.commit();
-    res.json({ success: true, message: '회원가입 성공' });
+    res.status(200).json({ success: true, message: '회원가입 성공' });
 
   } catch (error) {
     res.status(401).json({ success: false, message: '회원가입 실패, 다시 시도해 주세요' });
