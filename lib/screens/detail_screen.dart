@@ -3,7 +3,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toonflix/model/webtoon_detail_model.dart';
 import 'package:toonflix/model/webtoon_episode_model.dart';
 import 'package:toonflix/services/api_service.dart';
-
 import '../widgets/episode_widget.dart';
 
 class DetailScreen extends StatefulWidget {

@@ -1,18 +1,17 @@
-import 'dart:convert';
-
 import 'package:toonflix/model/webtoon_detail_model.dart';
 import 'package:toonflix/model/webtoon_episode_model.dart';
 import 'package:toonflix/model/webtoon_model.dart';
-import 'package:toonflix/services/jwt_service.dart';
+import 'package:toonflix/services/auth_dio.dart';
 
 class ApiService {
   static const String today = "today";
 
   static Future<List<WebtoonModel>> getTodaysToons() async {
     List<WebtoonModel> webtoonInstances = [];
-    final response = await dio.get('/$today');
+    var dio = await authDio();
+    final response = await dio.get('/webtoon/$today');
     if (response.statusCode == 200) {
-      final List<dynamic> webtoons = jsonDecode(response.data);
+      final List<dynamic> webtoons = response.data;
       for (var webtoon in webtoons) {
         webtoonInstances.add(WebtoonModel(webtoon));
       }
@@ -22,9 +21,10 @@ class ApiService {
   }
 
   static Future<WebtoonDetailModel> getToonById(String id) async {
-    final response = await dio.get('/detail/$id');
+    var dio = await authDio();
+    final response = await dio.get('/webtoon/detail/$id');
     if (response.statusCode == 200) {
-      final webtoon = jsonDecode(response.data);
+      final webtoon = response.data;
       return WebtoonDetailModel.fromJson(webtoon);
     }
     throw Error();
@@ -33,9 +33,10 @@ class ApiService {
   static Future<List<WebtoonEpisodeModel>> getLatesEpisodeById(
       String id) async {
     List<WebtoonEpisodeModel> episodesInstances = [];
-    final response = await dio.get('/$id/episodes');
+    var dio = await authDio();
+    final response = await dio.get('/webtoon/$id/episodes');
     if (response.statusCode == 200) {
-      final episodes = jsonDecode(response.data);
+      final episodes = response.data;
       for (var episode in episodes) {
         episodesInstances.add(WebtoonEpisodeModel.fromJson(episode));
       }

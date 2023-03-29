@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:toonflix/screens/home_screen.dart';
-import 'package:toonflix/services/jwt_service.dart';
+import 'login_screen.dart';
 
 class JoinScreen extends StatefulWidget {
   const JoinScreen({super.key});
@@ -30,11 +29,41 @@ class _JoinScreenState extends State<JoinScreen> {
       },
     );
 
-    if (response.statusCode == 200) {
-      isLoading = true;
-    } else {
-      isLoading = false;
-    }
+    setState(() {
+      if (response.statusCode == 200) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            // PadgeROuteBuilder : 더 다양한 애니메이션 적용 가능,
+            builder: (context) => const LoginScreen(),
+            fullscreenDialog: true,
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('회원가입 실패'),
+              content: const Text('회원가입 실패'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      // PadgeROuteBuilder : 더 다양한 애니메이션 적용 가능,
+                      builder: (context) => const LoginScreen(),
+                      fullscreenDialog: true,
+                    ),
+                  ),
+                  child: const Text('확인'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    });
   }
 
   @override
@@ -71,33 +100,6 @@ class _JoinScreenState extends State<JoinScreen> {
             ElevatedButton(
               onPressed: () {
                 _submit();
-                if (isLoading) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      // PadgeROuteBuilder : 더 다양한 애니메이션 적용 가능,
-                      builder: (context) => HomeScreen(),
-                      fullscreenDialog: true,
-                    ),
-                  );
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('회원가입 실패'),
-                        content: const Text('회원가입 실패'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.popUntil(
-                                context, ModalRoute.withName('/home')),
-                            child: const Text('확인'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
               },
               child: const Text('회원가입'),
             ),
