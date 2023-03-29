@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const mysql = require('mysql2/promise');
 const config = require('../env/db_config.json');
+
 require('dotenv').config();
 
 const refreshSecret = process.env.REFRESH_TOKEN_SECRET; 
@@ -16,7 +17,6 @@ const getUserData = async (refreshToken) => {
         if(rows.length == 0){
             throw new Error('일치하는 정보가 없습니다. 다시 시도해 주세요.')
         }
-        console.log(rows);
         return rows[0];
     } catch (error) {
         throw new Error('?');
@@ -34,23 +34,18 @@ const generateRefreshToken = () => {
 }
 
 const authenticateToken = (req, res, next) => {
-    console.log(4);
     const authHeader = req.headers['authorization'];
     const accessToken = authHeader && authHeader.split(' ')[1];
 
     if (!accessToken) {
-        console.log(3);
         return res.status(401).send('인증되지 않은 요청입니다.');
     }
 
     jwt.verify(accessToken, accessSecret, (err, decoded) => {
         if (err) {
             if(err.name === "TokenExpiredError"){
-                console.log(1);
                 return res.status(401).send('만료된 토큰입니다');
             } else {
-                console.log(2);
-                console.log(err);
                 return res.status(403).send('잘못된 토큰입니다1.');
             }
         }

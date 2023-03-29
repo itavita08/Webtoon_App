@@ -2,7 +2,6 @@ const bcrypt = require('bcrypt');
 const mysql = require('mysql2/promise');
 const config = require('../env/db_config.json');
 const jwt = require('../middlewares/jwt');
-// const { User } = require('../models/userDTO');
 
 const pool = mysql.createPool(config);
 
