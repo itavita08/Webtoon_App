@@ -26,7 +26,7 @@ const getUserData = async (refreshToken) => {
 }
 
 const generateAccessToken = (user) => {
-    return jwt.sign(user, accessSecret, { expiresIn: '1m' });
+    return jwt.sign(user, accessSecret, { expiresIn: '30m' });
 }
 
 const generateRefreshToken = () => {
