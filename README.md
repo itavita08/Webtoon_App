@@ -60,22 +60,22 @@
  ✔️ **기능 구현 영상**
  - 회원가입
  <p align='center'>
- <img src=https://user-images.githubusercontent.com/105635205/228582166-eb173225-d456-447b-93f2-8a041c025963.gif height="500">
+ <img src=https://user-images.githubusercontent.com/105635205/228582166-eb173225-d456-447b-93f2-8a041c025963.gif height="700">
  </p><br />
  
  - 로그인
  <p align='center'>
- <img src=https://user-images.githubusercontent.com/105635205/228582899-c8538324-9a10-40df-ae41-676bcf4d01f8.gif height="500">
+ <img src=https://user-images.githubusercontent.com/105635205/228582899-c8538324-9a10-40df-ae41-676bcf4d01f8.gif height="700">
  </p><br />
  
  - 오늘의 웹툰
  <p align='center'>
- <img src=https://user-images.githubusercontent.com/105635205/228583108-ab241e99-75e1-4b51-b8f5-15726bda76f6.gif height="500">
+ <img src=https://user-images.githubusercontent.com/105635205/228583108-ab241e99-75e1-4b51-b8f5-15726bda76f6.gif height="700">
  </p><br />
  
  - 회차
  <p align='center'>
- <img src=https://user-images.githubusercontent.com/105635205/228583235-deae9441-996f-434f-9860-c655931665ad.gif height="500">
+ <img src=https://user-images.githubusercontent.com/105635205/228583235-deae9441-996f-434f-9860-c655931665ad.gif height="700">
  </p><br />
 
  
